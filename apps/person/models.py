@@ -9,12 +9,7 @@ class DbObject(models.Model):
     create_user_id = models.IntegerField(blank=True, null=True)
     update_user_id = models.IntegerField(blank=True, null=True)
     
-class Person(models.Model):
-    dbobject = models.ForeignKey(
-        DbObject,
-        related_name="dbObj_person",
-        on_delete=models.CASCADE
-    )
+class Person(DbObject):
     first_name = models.CharField(max_length=555)
     last_name = models.CharField(max_length=555)
     patronymic = models.CharField(max_length=555)
@@ -25,56 +20,26 @@ class Person(models.Model):
     address = models.CharField(max_length=666)
     
 
-class Teachers(models.Model):
-    dbobject = models.ForeignKey(
-        DbObject,
-        related_name="dbObj",
-        on_delete=models.CASCADE
-    )
-    person = models.ForeignKey(
-        Person,
-        related_name="Teach_per",
-        on_delete=models.CASCADE
-    )
+class Teachers(Person):
+    direction = models.CharField(max_length=555)
     
     def __str__(self):
-        return self.person.first_name
+        return self.first_name
     
     class Meta:
-        verbose_name = 'Работник'
-        verbose_name_plural = 'Работники'
+        verbose_name = 'Учитель'
+        verbose_name_plural = 'Учителя'
         
-class Parents(models.Model,):
-    dbobject = models.ForeignKey(
-        DbObject,
-        related_name="dbObj_par",
-        on_delete=models.CASCADE
-    )
-    person = models.ForeignKey(
-        Person,
-        related_name="par_pers",
-        on_delete=models.CASCADE
-    )
-
+class Parents(Person):
     
     def __str__(self):
-        return self.person.first_name
+        return self.first_name
     
     class Meta:
         verbose_name = "Родитель"
         verbose_name_plural = "Родители"
         
-class Students(models.Model):
-    dbobject = models.ForeignKey(
-        DbObject,
-        related_name="dbObj_stu",
-        on_delete=models.CASCADE
-    )
-    person = models.ForeignKey(
-        Person,
-        related_name="par_stu",
-        on_delete=models.CASCADE
-    )
+class Students(Person):
     courses = models.CharField(
         max_length=555
     )
@@ -85,7 +50,7 @@ class Students(models.Model):
     )
     
     def __str__(self):
-        return self.person_first_name
+        return self.first_name
     
     class Meta:
         verbose_name = 'Студент'
